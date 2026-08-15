@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>superdotmaze-lvl6</title>
+    <style>body{
+        background-color: hsl(0, 0%, 87%);
+    }
+        
+  #exitbtn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+
+    background-color: hsl(0, 0%, 20%);
+    border: none;
+    border-radius: 5px;
+    color: hsl(0, 0%, 87%);
+
+   font-size: medium;
+    cursor: pointer;
+}
+
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#timer {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    
+    background-color: hsl(0, 0%, 20%);
+    color: white;
+    
+    padding: 10px 15px;
+    border-radius: 5px;
+    
+    font-size: 20px;
+}</style>
+</head>
+<body>
+
+    <div id="timer">3:00</div>
+            <a href="index.html">
+    <button id="exitbtn">&#10094</button>
+    </a>
+    <canvas id="game" width="1270" height="525"></canvas>
+
+    <script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let timeLeft = 180;
+
+const timer = document.getElementById("timer");
+
+let countdown = setInterval(function() {
+
+    timeLeft--;
+
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+
+    timer.textContent =
+        minutes + ":" + String(seconds).padStart(2, "0");
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        location.reload();
+    }
+
+}, 1000);
+
+
+    let exit = {
+    x: 1220,
+    y: 230,
+    width: 50,
+    height: 50
+};
+
+let player = {
+    x: 100,
+    y: 100,
+    width: 20,
+    height: 20,
+    speed: 2
+};
+
+
+
+    
+let playerColor = localStorage.getItem("playerColor") || "red";
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+
+ctx.fillStyle = "green";
+
+ctx.fillRect(
+    exit.x,
+    exit.y,
+    exit.width,
+    exit.height
+);
+
+    // player
+     ctx.fillStyle = playerColor;
+    ctx.fillRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+
+ctx.fillStyle = "gray"
+walls.forEach(wall => {
+    ctx.fillRect(
+        wall.x,
+        wall.y,
+        wall.width,
+        wall.height
+    );
+})
+
+
+ctx.fillStyle = "orange";
+
+    dangers.forEach(danger => {
+        ctx.fillRect(
+            danger.x,
+            danger.y,
+            danger.width,
+            danger.height
+        );
+    });
+};
+
+
+
+
+let walls = [
+      // 🧱 גבול עליון
+    {
+        x: 0,
+        y: 0,
+        width: 2270,
+        height: 0.000000001
+    },
+
+    // 🧱 גבול תחתון
+    {
+        x: 0,
+        y: 500,
+        width: 2270,
+        height: 0.0000001
+    },
+
+    // 🧱 גבול שמאלי
+    {
+        x: 0,
+        y: 0,
+        width: 0.00000001,
+        height: 500
+    },
+
+    // 🧱 גבול ימני
+    {
+        x: 1270,
+        y: 0,
+        width: 100,
+        height: 2270
+    },
+    
+    {
+        x:200,
+        y: 0,
+        width: 25,
+        height:200
+    },
+
+    {
+        x: 200,
+        y: 250,
+        width: 25,
+        height: 300
+
+    },
+
+    
+    {
+        x: 275,
+        y: 225,
+        width: 25,
+        height: 300
+
+    },
+
+    
+    
+    {
+        x: 275,
+        y: 0,
+        width: 25,
+        height: 175
+
+    },
+
+
+    {
+        x: 300,
+        y: 175,
+        width: 300,
+        height: 20,
+    },
+
+    
+    {
+        x: 300,
+        y: 219,
+        width: 300,
+        height: 20,
+    }
+
+
+
+];
+
+
+let dangers = [
+    {
+        x: 200,
+        y: 200,
+        width: 25,
+        height: 20
+    },
+
+    {
+        x: 200,
+        y: 244,
+        width: 25,
+        height: 20
+    },
+
+    
+    {
+        x: 275,
+        y: 219,
+        width: 25,
+        height: 20
+    },
+
+
+    {
+        x: 275,
+        y: 175,
+        width: 25,
+        height: 20
+    },
+
+    {
+        x: 310,
+        y: 216,
+        width: 15,
+        height: 3
+    },
+
+    
+    {
+        x: 347,
+        y: 195,
+        width: 15,
+        height: 3
+    },
+
+    
+    {
+        x: 387,
+        y: 216,
+        width: 15,
+        height: 3
+    },
+
+    
+    
+    {
+        x: 427,
+        y: 195,
+        width: 15,
+        height: 3
+    },
+
+
+        
+    {
+        x: 467,
+        y: 216,
+        width: 15,
+        height: 3
+    },
+
+
+
+        
+    
+    {
+        x: 507,
+        y: 195,
+        width: 15,
+        height: 3
+    },
+
+
+    
+        
+    {
+        x: 547,
+        y: 216,
+        width: 15,
+        height: 3
+    }
+];
+
+let keys = {};
+
+document.addEventListener("keydown", function(event) {
+    keys[event.key.toLowerCase()] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+function update(){
+
+
+    for (let danger of dangers) {
+    if (isColliding(player, danger)) {
+        player.x = 50;
+        player.y = 100;
+    }
+}
+
+    if (isColliding(player, exit)) {
+    window.location.href ="win.html";
+}
+
+         if (keys["d"] || keys["arrowright"]) {
+        let oldX = player.x;
+        player.x += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // A - שמאלה
+    if (keys["a"] || keys["arrowleft"]) {
+        let oldX = player.x;
+        player.x -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // W - למעלה
+    if (keys["w"] || keys["arrowup"]) {
+        let oldY = player.y;
+        player.y -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+
+    // S - למטה
+    if (keys["s"] || keys["arrowdown"]) {
+        let oldY = player.y;
+        player.y += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+function gameLoop() {
+    update();
+    draw();
+
+
+
+    requestAnimationFrame(gameLoop);
+}
+
+function isColliding(player, wall) {
+    return (
+        player.x < wall.x + wall.width &&
+        player.x + player.width > wall.x &&
+        player.y < wall.y + wall.height &&
+        player.y + player.height > wall.y
+    );
+}
+
+gameLoop();
+
+localStorage.setItem("lastLevel", "level5");
+</script>
+</body>
+</html>
