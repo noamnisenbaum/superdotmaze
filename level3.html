@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <titlet>superdotmaze-lvl3</title>
+    <style>body{
+        background-color: hsl(0, 0%, 87%);
+    }
+    #exitbtn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+
+    background-color: hsl(0, 0%, 20%);
+    border: none;
+    border-radius: 5px;
+    color: hsl(0, 0%, 87%);
+
+   font-size: medium;
+    cursor: pointer;
+} 
+
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}</style>
+</head>
+<body>
+    <a href="index.html">
+    <button id="exitbtn">&#10094</button>
+    </a>
+    <canvas id="game" width="1270" height="525"></canvas>
+
+    <script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+    let exit = {
+    x: 520,
+    y: 200,
+    width: 50,
+    height: 50
+};
+
+let player = {
+    x: 50,
+    y: 100,
+    width: 37,
+    height: 37,
+    speed: 2.7
+};
+let playerColor = localStorage.getItem("playerColor") || "red";
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+ctx.fillStyle = "green";
+
+ctx.fillRect(
+    exit.x,
+    exit.y,
+    exit.width,
+    exit.height
+);
+
+    // player
+        
+   ctx.fillStyle = playerColor;
+    ctx.fillRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+
+ctx.fillStyle = "gray"
+walls.forEach(wall => {
+    ctx.fillRect(
+        wall.x,
+        wall.y,
+        wall.width,
+        wall.height
+    );
+})};
+let walls = [
+      // 🧱 גבול עליון
+    {
+        x: 0,
+        y: 0,
+        width: 2270,
+        height: 0.00000000001
+    },
+
+    // 🧱 גבול תחתון
+    {
+        x: 0,
+        y: 500,
+        width: 2270,
+        height: 0.0000000000000000000000001
+    },
+
+    // 🧱 גבול שמאלי
+    {
+        x: 0,
+        y: 0,
+        width: 0.0000000001,
+        height: 22020
+    },
+
+    // 🧱 גבול ימני
+    {
+        x: 1270,
+        y: 0,
+        width: 100,
+        height: 2270
+    },
+    
+    {
+        x:190,
+        y:0,
+        width:50,
+        height: 460
+    },
+
+    {
+        x:240,
+        y: 410,
+        width: 460,
+        height:50
+    },
+
+    {
+        x:740,
+        y:0,
+        width:50,
+        height: 460
+    },
+
+    {
+        x:279.5,
+        y:320,
+        width:461,
+        height: 50
+    },
+
+    {
+        x:279.6,
+        y:0,
+        width:50,
+        height: 280
+    },
+
+    {
+        x: 370,
+        y: 260,
+        width: 50,
+        height: 80
+    },
+
+    {
+        x: 460,
+        y: 200,
+        width: 50,
+        height: 80
+    },
+
+    {
+        x: 329,
+        y: 167,
+        width: 181,
+        height: 50
+    },
+
+    {
+        x: 510,
+        y: 255,
+        width: 70,
+        height: 25
+    },
+    
+
+    {
+        x: 580,
+        y: 130,
+        width: 50,
+        height: 150
+    },
+
+    {
+        x: 670,
+        y: 170,
+        width: 70,
+        height: 110
+    },
+
+    {
+        x: 580,
+        y: 80,
+        width: 120,
+        height: 50
+    },
+
+    {
+        x: 370,
+        y: 80,
+        width: 210,
+        height: 49
+    },
+
+    {
+        x: 200,
+        y: 0,
+        width: 550,
+        height: 25
+    },
+
+    {
+        x: 550,
+        y: 65,
+        width: 40,
+        height: 50
+    },
+
+    {
+        x: 470,
+        y: 0,
+        width: 40,
+        height: 40
+    },
+    
+    {
+        x: 630,
+        y: 0,
+        width: 40,
+        height: 40
+    },
+
+    
+    {
+        x: 390,
+        y: 65,
+        width: 40,
+        height: 50
+    }
+    
+
+
+];
+
+let keys = {};
+
+document.addEventListener("keydown", function(event) {
+    keys[event.key.toLowerCase()] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+function update(){
+
+
+    if (isColliding(player, exit)) {
+    window.location.href ="win.html";
+}
+
+         if (keys["d"] || keys["arrowright"]) {
+        let oldX = player.x;
+        player.x += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // A - שמאלה
+    if (keys["a"] || keys["arrowleft"]) {
+        let oldX = player.x;
+        player.x -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // W - למעלה
+    if (keys["w"] || keys["arrowup"]) {
+        let oldY = player.y;
+        player.y -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+
+    // S - למטה
+    if (keys["s"] || keys["arrowdown"]) {
+        let oldY = player.y;
+        player.y += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+}
+
+
+
+function gameLoop() {
+    update();
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+function isColliding(player, wall) {
+    return (
+        player.x < wall.x + wall.width &&
+        player.x + player.width > wall.x &&
+        player.y < wall.y + wall.height &&
+        player.y + player.height > wall.y
+    );
+}
+
+gameLoop();
+localStorage.setItem("lastLevel", "level3");
+</script>
+</body>
+</html>

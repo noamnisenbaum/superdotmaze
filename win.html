@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>superdotmaze-you win!</title>
+    <style>
+    body{
+        background-color: hsl(0, 0%, 10%);
+    }
+    
+    
+    #con{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        font-weight: bold;
+        color: white;
+        transform:translateY(200px);
+    }
+    
+    #playagain{
+        background-color: hsl(205, 100%, 60%);
+        border-radius: 5px;
+        border: none;
+        color: white;
+        width: 110px;
+        height: 40px;
+    }
+    
+    #homescreen{
+        background-color: hsl(205, 100%, 60%);
+        border: none;
+        color:white;
+        border-radius: 5px;
+        width: 210px;
+        height: 40px;
+    }
+    #h1{
+        font-size: 60px;
+    }
+    
+    #next{
+              background-color: hsl(205, 100%, 60%);
+              border-radius: 5px;
+              border: none;
+              width: 170px;
+              height: 40px;
+              transform: translateY(15px);
+              color: white;
+    }</style>
+</head>
+<body>
+    <div id="con">
+    <h1 id="h1">you win!</h1><br>
+    <a href="index.html" id="homescreencon"><button id="homescreen">levels</button></a><br>
+    <button onclick="playAgain()" id="playagain">play again</button>
+    <button id="next" onclick="nextlevel()">next level</button>
+    </div>
+<script>
+    function playAgain() {
+    let level = localStorage.getItem("lastLevel");
+
+    if (level === "level2") {
+        window.location.href = "level2.html";
+    }
+    else if(level === "level1") {
+        window.location.href = "le1plyw.html";
+    }
+
+    else if(level === "level3"){
+        window.location.href = "level3.html"
+    }
+
+    else if(level === "level4"){
+        window.location.href = "level4.html"
+    }
+
+    else if(level === "level5"){
+        window.location.href = "level5.html"
+    }
+
+}
+
+    function nextlevel() {
+    let level = localStorage.getItem("lastLevel");
+
+    if (level === "level2") {
+        window.location.href = "level3.html";
+    }
+    else if(level === "level1") {
+        window.location.href = "level2.html";
+    }
+
+    else if(level === "level3"){
+        window.location.href = "level4.html"
+    }
+
+    else if(level === "level4"){
+        window.location.href = "level5.html"
+    }
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>superdotmaze-colors-menu</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: hsl(0, 0%, 10%);
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100vh;
+        }
+
+        #container {
+            background-color: hsl(0, 0%, 20%);
+            padding: 40px;
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: hsl(0, 0%, 87%);
+        }
+
+        .colorbtn {
+            width: 70px;
+            height: 70px;
+
+            border: none;
+            border-radius: 50%;
+
+            margin: 10px;
+
+            cursor: pointer;
+        }
+
+        #red {
+            background-color: hsl(0, 100%, 50%);
+        }
+
+
+        #red:active{
+            background-color: hsl(0, 100%, 70%);
+        }
+        #blue {
+            background-color: blue;
+        }
+
+        #blue:active {
+            background-color: hsl(240, 100%, 70%);
+        }
+
+        #green {
+            background-color: hsl(120, 61%, 50%);
+        }
+
+        #green:active {
+            background-color: hsl(120, 61%, 70%);
+        }
+
+        #yellow {
+            background-color: yellow;
+        }
+
+        
+        #yellow:active {
+            background-color: hsl(60, 100%, 40%);
+        }
+
+        #purple {
+            background-color: purple;
+        }
+
+        
+        #purple:active {
+            background-color: hsl(300, 100%, 45%);
+        }
+
+        #back {
+            margin-top: 20px;
+
+            padding: 10px 25px;
+
+            border: none;
+            border-radius: 5px;
+
+            background-color: hsl(205, 100%, 50%);
+            color: white;
+
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+
+        <h1>Choose your color 🎨</h1>
+
+        <button class="colorbtn" id="red"
+            onclick="chooseColor('red')"></button>
+
+        <button class="colorbtn" id="blue"
+            onclick="chooseColor('blue')"></button>
+
+        <button class="colorbtn" id="green"
+            onclick="chooseColor('limegreen')"></button>
+
+        <button class="colorbtn" id="yellow"
+            onclick="chooseColor('yellow')"></button>
+
+        <button class="colorbtn" id="purple"
+            onclick="chooseColor('purple')"></button>
+
+        <br>
+
+        <a href="homescreen.html">
+            <button id="back">← Back</button>
+        </a>
+
+    </div>
+
+    <script>
+
+        function chooseColor(color) {
+            localStorage.setItem("playerColor", color);
+        }
+
+    </script>
+
+</body>
+</html>

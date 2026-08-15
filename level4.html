@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>superdotmaze-lvl4</title>
+    <style>body{
+        background-color: hsl(0, 0%, 87%);
+    }
+        
+  #exitbtn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+
+    background-color: hsl(0, 0%, 20%);
+    border: none;
+    border-radius: 5px;
+    color: hsl(0, 0%, 87%);
+
+   font-size: medium;
+    cursor: pointer;
+}
+
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}</style>
+</head>
+<body>
+            <a href="index.html">
+    <button id="exitbtn">&#10094</button>
+    </a>
+    <canvas id="game" width="1270" height="525"></canvas>
+
+    <script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+    let exit = {
+    x: 1220,
+    y: 230,
+    width: 50,
+    height: 50
+};
+
+let player = {
+    x: 100,
+    y: 100,
+    width: 20,
+    height: 20,
+    speed: 2
+};
+
+
+
+    
+let playerColor = localStorage.getItem("playerColor") || "red";
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+
+ctx.fillStyle = "green";
+
+ctx.fillRect(
+    exit.x,
+    exit.y,
+    exit.width,
+    exit.height
+);
+
+    // player
+     ctx.fillStyle = playerColor;
+    ctx.fillRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+
+ctx.fillStyle = "gray"
+walls.forEach(wall => {
+    ctx.fillRect(
+        wall.x,
+        wall.y,
+        wall.width,
+        wall.height
+    );
+})
+
+
+ctx.fillStyle = "orange";
+
+    dangers.forEach(danger => {
+        ctx.fillRect(
+            danger.x,
+            danger.y,
+            danger.width,
+            danger.height
+        );
+    });
+};
+
+
+
+
+let walls = [
+      // 🧱 גבול עליון
+    {
+        x: 0,
+        y: 0,
+        width: 2270,
+        height: 0.000000001
+    },
+
+    // 🧱 גבול תחתון
+    {
+        x: 0,
+        y: 500,
+        width: 2270,
+        height: 0.0000001
+    },
+
+    // 🧱 גבול שמאלי
+    {
+        x: 0,
+        y: 0,
+        width: 0.00000001,
+        height: 500
+    },
+
+    // 🧱 גבול ימני
+    {
+        x: 1270,
+        y: 0,
+        width: 100,
+        height: 2270
+    },
+
+    {
+        x: 150,
+        y:  0,
+        width: 25,
+        height: 75
+    },
+
+    
+    {
+        x: 355,
+        y:  0,
+        width: 25,
+        height: 75
+    },
+
+        
+    {
+        x: 355,
+        y:  425,
+        width: 25,
+        height: 75
+    },
+
+            
+    {
+        x: 150,
+        y:  425,
+        width: 25,
+        height: 75
+    },
+
+                
+    {
+        x: 155,
+        y:  425,
+        width: 200,
+        height: 25
+    },
+
+    
+                
+    {
+        x: 155,
+        y:  50,
+        width: 200,
+        height: 25
+    },
+
+    
+        
+    {
+        x: 375,
+        y:  295,
+        width: 0.01,
+        height: 200
+    },
+                    
+    {
+        x: 150,
+        y:  268,
+        width: 25,
+        height: 135
+    },
+
+                    
+    {
+        x: 150,
+        y:  265,
+        width: 230,
+        height: 25
+    },
+    
+                        
+    {
+        x: 200,
+        y:  310,
+        width: 25,
+        height: 125
+    },
+
+                            
+    {
+        x: 250,
+        y:  265,
+        width: 25,
+        height: 139
+    },
+
+    {                        
+        x: 300,
+        y:  310,
+        width: 25,
+        height: 125
+    },
+
+    
+                            
+    {
+        x: 355,
+        y:  265,
+        width: 25,
+        height: 139
+    },
+
+        
+                            
+    {
+        x: 355,
+        y:  75,
+        width: 25,
+        height: 168
+    },
+
+    
+    {                        
+        x: 300,
+        y:  100,
+        width: 25,
+        height: 168
+    },
+
+
+                                
+    {
+        x: 250,
+        y:  75,
+        width: 25,
+        height: 168
+    },
+
+
+                                
+    {
+        x: 200,
+        y:  100,
+        width: 25,
+        height: 168
+    },
+
+
+    
+                                
+    {
+        x: 150,
+        y:  75,
+        width: 25,
+        height: 168
+    },
+
+    {
+        x: 375,
+        y:  425,
+        width: 300,
+        height: 25
+    },
+
+    
+    {
+        x: 375,
+        y:  50,
+        width: 300,
+        height: 25
+    },
+
+        
+    {
+        x: 675,
+        y:  50,
+        width: 25,
+        height: 150
+    },
+
+
+            
+    {
+        x: 675,
+        y:  300,
+        width: 25,
+        height: 150
+    },
+
+    
+    
+    {
+        x: 675,
+        y:  300,
+        width: 400,
+        height: 25
+    },
+
+
+        
+    {
+        x: 675,
+        y:  200,
+        width: 400,
+        height: 25
+    }
+
+    
+
+];
+
+
+let dangers = [
+    {
+        x: 675,
+        y: 225,
+        width: 400,
+        height: 25.5
+    },
+    {
+        x: 675,
+        y: 275,
+        width: 400,
+        height: 25.5
+    }
+];
+
+let keys = {};
+
+document.addEventListener("keydown", function(event) {
+    keys[event.key.toLowerCase()] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keys[event.key.toLowerCase()] = false;
+});
+
+function update(){
+
+
+    for (let danger of dangers) {
+    if (isColliding(player, danger)) {
+        player.x = 50;
+        player.y = 100;
+    }
+}
+
+    if (isColliding(player, exit)) {
+    window.location.href ="win.html";
+}
+
+         if (keys["d"] || keys["arrowright"]) {
+        let oldX = player.x;
+        player.x += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // A - שמאלה
+    if (keys["a"] || keys["arrowleft"]) {
+        let oldX = player.x;
+        player.x -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.x = oldX;
+            }
+        }
+    }
+
+    // W - למעלה
+    if (keys["w"] || keys["arrowup"]) {
+        let oldY = player.y;
+        player.y -= player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+
+    // S - למטה
+    if (keys["s"] || keys["arrowdown"]) {
+        let oldY = player.y;
+        player.y += player.speed;
+
+        for (let wall of walls) {
+            if (isColliding(player, wall)) {
+                player.y = oldY;
+            }
+        }
+    }
+}
+
+
+
+function gameLoop() {
+    update();
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+function isColliding(player, wall) {
+    return (
+        player.x < wall.x + wall.width &&
+        player.x + player.width > wall.x &&
+        player.y < wall.y + wall.height &&
+        player.y + player.height > wall.y
+    );
+}
+
+gameLoop();
+
+localStorage.setItem("lastLevel", "level4");
+</script>
+</body>
+</html>
