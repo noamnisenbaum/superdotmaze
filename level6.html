@@ -45,7 +45,7 @@
 </head>
 <body>
 
-    <div id="timer">3:00</div>
+    <div id="timer">3:30</div>
             <a href="index.html">
     <button id="exitbtn">&#10094</button>
     </a>
@@ -55,7 +55,7 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let timeLeft = 180;
+let timeLeft = 210;
 
 const timer = document.getElementById("timer");
 
@@ -78,10 +78,10 @@ let countdown = setInterval(function() {
 
 
     let exit = {
-    x: 1220,
+    x: 1228,
     y: 230,
-    width: 50,
-    height: 50
+    width: 25,
+    height: 25
 };
 
 let player = {
@@ -227,7 +227,60 @@ let walls = [
         y: 219,
         width: 300,
         height: 20,
+    },
+
+    {x:600,
+     y:219,
+     width: 25,
+     height: 100   
+    },
+
+    
+    {x:600,
+     y: 95,
+     width: 25,
+     height: 100   
+    },
+
+    
+    
+    {x:925,
+     y: 95,
+     width: 25,
+     height: 100   
+    },
+
+
+    
+    
+    {x:925,
+     y: 219,
+     width: 25,
+     height: 100   
+    },
+
+
+    {
+        x: 950,
+        y: 219,
+        width: 200,
+        height: 25
+    },
+
+
+    
+    {
+        x: 950,
+        y: 170,
+        width: 250,
+        height: 25
     }
+
+
+    
+
+
+
 
 
 
@@ -266,7 +319,7 @@ let dangers = [
     },
 
     {
-        x: 308,
+       x: 308,
         y: 216,
         width: 15,
         height: 3
@@ -325,7 +378,143 @@ let dangers = [
         y: 216,
         width: 15,
         height: 3
+    },
+
+    {
+        x: 625,
+        y: 294,
+        width: 300,
+        height:25
+    },
+
+    
+    {
+        x: 625,
+        y: 95,
+        width: 300,
+        height:25
+    },
+
+    {
+        x: 675,
+        y: 150,
+        width: 25,
+        height: 160
+    },
+
+
+    
+    {
+        x: 725,
+        y: 95,
+        width: 25,
+        height: 160
+    },
+
+    
+    {
+        x: 775,
+        y: 150,
+        width: 25,
+        height: 160
+    },
+
+
+    
+    
+    {
+        x: 825,
+        y: 95,
+        width: 25,
+        height: 160
+    },
+
+
+    
+    
+    {
+        x: 875,
+        y: 150,
+        width: 25,
+        height: 160
+    },
+
+        
+        
+    {
+        x: 950,
+        y: 216,
+        width: 15,
+        height: 3
+    },
+
+    
+        
+    
+    {
+        x: 997,
+        y: 195,
+        width: 15,
+        height: 3
+    },
+
+            
+    {
+        x: 1045,
+        y: 216,
+        width: 15,
+        height: 3
+    },
+
+
+        
+    {
+        x: 1085,
+        y: 195,
+        width: 15,
+        height: 3
+    },
+
+        
+    
+    {
+        x: 1150,
+        y: 219,
+        width: 25,
+        height: 150
+    },
+
+
+    
+        
+    
+    {
+        x: 1200,
+        y: 170,
+        width: 25,
+        height: 177
+    },
+
+
+
+        
+    {
+        x: 1150,
+        y: 369,
+        width: 150,
+        height: 25
+    },
+
+
+        
+    {
+        x: 1255,
+        y: 219,
+        width: 35,
+        height: 150
     }
+
+
 ];
 
 let keys = {};
