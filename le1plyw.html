@@ -39,8 +39,8 @@
 }
 
 #controls button {
-    width: 20px;
-    height: 20px;
+    width: 60px;
+    height: 60px;
     margin: 3px;
     font-size: 25px;
     border: none;
@@ -184,7 +184,35 @@ let walls = [
 
 ];
 
+
 let keys = {};
+
+const buttons = document.querySelectorAll("#controls button");
+
+buttons.forEach(button => {
+
+    const key = button.dataset.key;
+
+    button.addEventListener("pointerdown", function(event) {
+        event.preventDefault();
+        keys[key] = true;
+    });
+
+    button.addEventListener("pointerup", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+
+    button.addEventListener("pointercancel", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+
+    button.addEventListener("pointerleave", function(event) {
+        keys[key] = false;
+    });
+});
+
 
 document.addEventListener("keydown", function(event) {
     keys[event.key.toLowerCase()] = true;

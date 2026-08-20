@@ -65,7 +65,7 @@
 
 @media (max-width: 1024px) {
     #game {
-        width: 95vw;
+        width: 75vw;
         height: auto;
     }
 
@@ -132,28 +132,35 @@ let player = {
 };
 
 
+
 let keys = {};
-        const buttons = document.querySelectorAll("#controls button");
+
+const buttons = document.querySelectorAll("#controls button");
 
 buttons.forEach(button => {
 
     const key = button.dataset.key;
 
-    button.addEventListener("touchstart", function(event) {
+    button.addEventListener("pointerdown", function(event) {
         event.preventDefault();
         keys[key] = true;
     });
 
-    button.addEventListener("touchend", function(event) {
+    button.addEventListener("pointerup", function(event) {
         event.preventDefault();
         keys[key] = false;
     });
 
-    button.addEventListener("touchcancel", function(event) {
+    button.addEventListener("pointercancel", function(event) {
         event.preventDefault();
         keys[key] = false;
     });
+
+    button.addEventListener("pointerleave", function(event) {
+        keys[key] = false;
+    });
 });
+
 
     
 let playerColor = localStorage.getItem("playerColor") || "red";
