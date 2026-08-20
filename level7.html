@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>superdotmaze-lvl7</title>
+
+    <style>
+        body {
+            background-color: hsl(0, 0%, 87%);
+        }
+
+        #exitbtn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+
+            background-color: hsl(0, 0%, 20%);
+            border: none;
+            border-radius: 5px;
+            color: hsl(0, 0%, 87%);
+
+            font-size: medium;
+            cursor: pointer;
+        }
+
+        #game {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #timer {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+
+            background-color: hsl(0, 0%, 20%);
+            color:hsl(0, 0%, 87%);
+
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="timer">1:30</div>
+
+    <a href="index.html">
+        <button id="exitbtn">&#10094;</button>
+    </a>
+
+    <canvas id="game" width="1270" height="525"></canvas>
+
+    <script>
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        // =========================
+        // TIMER
+        // =========================
+
+        let timeLeft = 90;
+        const timer = document.getElementById("timer");
+
+        let countdown = setInterval(function () {
+
+            timeLeft--;
+
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+
+            timer.textContent =
+                minutes + ":" + String(seconds).padStart(2, "0");
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                location.reload();
+            }
+
+        }, 1000);
+
+
+        // =========================
+        // EXIT
+        // =========================
+
+        let exit = {
+            x: 1220,
+            y: 230,
+            width: 50,
+            height: 50
+        };
+
+
+        // =========================
+        // PLAYER
+        // =========================
+
+        let player = {
+            x: 30,
+            y: 115,
+            width: 20,
+            height: 20,
+            speed: 2
+        };
+
+
+        let playerColor =
+            localStorage.getItem("playerColor") || "red";
+
+
+        // =========================
+        // WALLS
+        // =========================
+
+        let walls = [
+
+            // TOP
+            {
+                x: 0,
+                y: 0,
+                width: 1270,
+                height: 0.01
+            },
+
+            // BOTTOM
+            {
+                x: 0,
+                y: 500,
+                width: 1270,
+                height: 0.01
+            },
+
+            // LEFT
+            {
+                x: 0,
+                y: 0,
+                width: 0.01,
+                height: 500
+            },
+
+            // RIGHT
+            {
+                x: 1270,
+                y: 0,
+                width: 0.01,
+                height: 500
+            },
+
+            {
+                x: 0,
+                y: 250,
+                width: 350,
+                height: 25
+            },
+
+            {
+                x: 350,
+                y: 0,
+                width: 25,
+                height: 275
+            },
+
+            {
+                x: 310,
+                y: 85,
+                width: 45,
+                height: 15
+            },
+
+            
+            {
+                x: 310,
+                y: 170,
+                width: 45,
+                height: 15
+            },
+
+                        
+            {
+                x: 3,
+                y: 325,
+                width: 45,
+                height: 15
+            },
+
+            
+                        
+            {
+                x: 3,
+                y: 410,
+                width: 45,
+                height: 15
+            },
+
+
+            {
+               x: 0,
+               y: 255,
+               width: 25,
+               height: 300
+            },
+
+
+            {
+                x: 0,
+                y:  500,
+                width: 360,
+                height: 25
+            },
+
+
+            {
+                x: 100,
+                y: 415,
+                width: 25,
+                height: 85
+            },
+
+
+            
+            {
+                x: 100,
+                y: 260,
+                width: 25,
+                height: 85
+            },
+
+
+            {
+                x: 100,
+                y: 345,
+                width: 200,
+                height: 25
+            },
+
+
+            
+
+            {
+                x: 100,
+                y: 410,
+                width: 200,
+                height: 25
+            },
+
+
+            
+            {
+               x: 350,
+               y: 255,
+               width: 25,
+               height: 300
+            },
+
+
+            {
+                x: 100,
+                y: 170,
+                width: 25,
+                height: 85
+            },
+
+
+            
+            {
+                x: 100,
+                y: 150,
+                width: 200,
+                height: 25
+            },
+
+
+            
+            {
+                x: 100,
+                y: 90,
+                width: 200,
+                height: 25
+            },
+
+
+            
+            {
+                x: 100,
+                y: 10,
+                width: 25,
+                height: 85
+            },
+
+
+                       
+            {
+                x: 0,
+                y: 0,
+                width: 350,
+                height: 25
+            },
+
+
+                        
+            {
+               x: 0,
+               y: 0,
+               width: 25,
+               height: 300
+            },
+
+
+            {
+                x: 750,
+                y: 200,
+                width: 25,
+                height: 350
+            },
+
+
+                                   
+            {
+                x: 350,
+                y: 500,
+                width: 400,
+                height: 25
+            },
+
+
+                                               
+            {
+                x: 350,
+                y: 200,
+                width: 400,
+                height: 25
+            },
+
+
+            {
+                x: 500,
+                y: 425,
+                width: 25,
+                height: 75
+            },
+
+
+            
+            {
+                x: 500,
+                y: 225,
+                width: 25,
+                height: 150
+            },
+
+            
+            {
+                x: 525,
+                y: 330,
+                width: 80,
+                height: 25
+            },
+
+
+            {
+                x: 650,
+                y: 330,
+                width: 45,
+                height: 25
+            },
+
+
+            
+            {
+                x: 665,
+                y:  260,
+                width: 25,
+                height: 300
+            },
+
+
+            {
+                x: 350,
+                y:  0,
+                width: 425,
+                height: 25
+            }
+
+            
+        ];
+
+
+        // =========================
+        // DANGERS
+        // =========================
+
+        let dangers = [
+
+            {
+                x: 100,
+                y: 370,
+                width: 25,
+                height: 16
+            },
+
+            {
+                x: 147,
+                y: 394,
+                width: 25,
+                height: 16
+            },
+
+                        
+            {
+                x: 194,
+                y: 370,
+                width: 25,
+                height: 16
+            },
+
+
+            
+            {
+                x: 246.5,
+                y: 394,
+                width: 25,
+                height: 16
+            },
+
+
+            {
+                x: 100,
+                y: 138,
+                width: 25,
+                height: 12
+            },
+
+            {
+                x: 147,
+                y: 115,
+                width: 25,
+                height: 12
+            },
+
+                        
+            {
+                x: 194,
+                y: 138,
+                width: 25,
+                height: 12
+            },
+
+
+            
+            {
+                x: 246.5,
+                y: 115,
+                width: 25,
+                height: 12
+            },
+
+
+            {
+                x: 500,
+                y: 410,
+                width: 25,
+                height: 15
+            },
+
+
+            
+            {
+                x: 500,
+                y: 373,
+                width: 25,
+                height: 15
+            },
+
+
+            {
+                x: 605,
+                y: 330,
+                width: 15,
+                height: 25,
+            },
+
+
+            
+            {
+                x: 645,
+                y: 330,
+                width: 15,
+                height: 25,
+            },
+
+
+            
+            {
+                x: 695,
+                y: 330,
+                width: 15,
+                height: 25,
+            },
+
+
+            
+            {
+                x: 735,
+                y: 330,
+                width: 15,
+                height: 25,
+            },
+
+
+            {
+                x: 665,
+                y: 259,
+                width: 25,
+                height: 15,
+            },
+            
+            
+            
+            {
+                x: 665,
+                y: 225,
+                width: 25,
+                height: 15,
+            },
+
+
+            {
+                x: 500,
+                y: 25,
+                width: 25,
+                height: 100
+            },
+
+
+            
+            {
+                x: 500,
+                y: 150,
+                width: 25,
+                height: 50
+            },
+
+
+                        
+            {
+                x: 550,
+                y: 25,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 550,
+                y: 100,
+                width: 25,
+                height: 100
+            },
+
+
+            
+                        
+            {
+                x: 600,
+                y: 150,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 600,
+                y: 25,
+                width: 25,
+                height: 100
+            },
+
+
+                                    
+            {
+                x: 650,
+                y: 25,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 650,
+                y: 100,
+                width: 25,
+                height: 100
+            },
+
+
+                                    
+            {
+                x: 700,
+                y: 150,
+                width: 25,
+                height: 50
+            },
+
+
+            {
+                x: 700,
+                y: 25,
+                width: 25,
+                height: 100
+            },
+
+
+                                                
+            {
+                x: 750,
+                y: 25,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 750,
+                y: 100,
+                width: 25,
+                height: 100
+            },
+
+
+            {
+                x: 800,
+                y: 0,
+                width: 125,
+                height: 150
+            },
+
+
+            
+            {
+                x: 800,
+                y: 300,
+                width: 125,
+                height: 400
+            },
+
+
+                                                            
+            {
+                x: 800,
+                y: 150,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 800,
+                y: 223,
+                width: 25,
+                height: 100
+            },
+
+
+                                                                        
+            {
+                x: 850,
+                y: 250,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 850,
+                y: 128,
+                width: 25,
+                height: 100
+            },
+
+
+                                                                        
+            {
+                x: 900,
+                y: 150,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 900,
+                y: 223,
+                width: 25,
+                height: 100
+            },
+
+
+            {
+                x: 1000,
+                y: 400,
+                width: 125,
+                height: 150
+            },
+
+
+            
+            {
+                x: 1000,
+                y: 0,
+                width: 125,
+                height: 300
+            },
+
+            //
+
+                                                                        
+            {
+                x: 1000,
+                y: 300,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 1000,
+                y: 373,
+                width: 25,
+                height: 100
+            },
+
+
+                                                                        
+            {
+                x: 1050,
+                y: 350,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 1050,
+                y: 228,
+                width: 25,
+                height: 100
+            },
+
+
+                                                                        
+            {
+                x: 1100,
+                y: 300,
+                width: 25,
+                height: 50
+            },
+
+
+            
+            {
+                x: 1100,
+                y: 373,
+                width: 25,
+                height: 100
+            }
+
+
+
+
+        ];
+
+
+        // =========================
+        // PORTALS
+        // =========================
+
+        let portals = [
+
+            
+            {
+                x: 320,
+                y: 100,
+                width: 30,
+                height: 70,
+
+                targetX: 50,
+                targetY: 345,
+
+                color: "blueviolet"
+            },
+
+            {
+                x: 3,
+                y: 340,
+                width: 30,
+                height: 70,
+
+                targetX: 260,
+                targetY: 100,
+
+                color: "goldenrod"
+            },
+
+
+            
+            {
+                x: 320,
+                y: 350,
+                width: 30,
+                height: 70,
+
+                targetX: 420,
+                targetY: 370,
+
+                color: "blueviolet"
+            },
+
+            {
+                x: 375,
+                y: 350,
+                width: 30,
+                height: 70,
+
+                targetX: 300,
+                targetY: 370,
+
+                color:"goldenrod"
+            },
+
+
+            {
+                x: 695,
+                y: 450,
+                width: 50,
+                height: 30,
+
+                targetX: 400,
+                targetY: 50,
+
+                color: "blueviolet"
+            },
+
+
+            {
+                x: 400,
+                y: 3,
+                width: 50,
+                height: 30,
+
+                targetX: 695,
+                targetY: 400,
+
+                color: "goldenrod"
+            }
+        ];
+
+
+        // =========================
+        // PORTAL COOLDOWN
+        // =========================
+
+        let portalCooldown = 0;
+
+
+        // =========================
+        // KEYBOARD
+        // =========================
+
+        let keys = {};
+
+
+        document.addEventListener("keydown", function (event) {
+            keys[event.key.toLowerCase()] = true;
+        });
+
+
+        document.addEventListener("keyup", function (event) {
+            keys[event.key.toLowerCase()] = false;
+        });
+
+
+        // =========================
+        // DRAW
+        // =========================
+
+        function draw() {
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            // EXIT
+
+            ctx.fillStyle = "green";
+
+            ctx.fillRect(
+                exit.x,
+                exit.y,
+                exit.width,
+                exit.height
+            );
+
+
+            // PLAYER
+
+            ctx.fillStyle = playerColor;
+
+            ctx.fillRect(
+                player.x,
+                player.y,
+                player.width,
+                player.height
+            );
+
+
+            // WALLS
+
+            ctx.fillStyle = "gray";
+
+            walls.forEach(function (wall) {
+
+                ctx.fillRect(
+                    wall.x,
+                    wall.y,
+                    wall.width,
+                    wall.height
+                );
+
+            });
+
+
+            // PORTALS
+
+            portals.forEach(function (portal) {
+
+                ctx.fillStyle = portal.color;
+
+                ctx.fillRect(
+                    portal.x,
+                    portal.y,
+                    portal.width,
+                    portal.height
+                );
+
+            });
+
+
+            // DANGERS
+
+            ctx.fillStyle = "orange";
+
+            dangers.forEach(function (danger) {
+
+                ctx.fillRect(
+                    danger.x,
+                    danger.y,
+                    danger.width,
+                    danger.height
+                );
+
+            });
+
+        }
+
+
+        // =========================
+        // COLLISION
+        // =========================
+
+        function isColliding(player, object) {
+
+            return (
+                player.x < object.x + object.width &&
+                player.x + player.width > object.x &&
+                player.y < object.y + object.height &&
+                player.y + player.height > object.y
+            );
+
+        }
+
+
+        // =========================
+        // UPDATE
+        // =========================
+
+        function update() {
+
+            // Portal cooldown
+
+            if (portalCooldown > 0) {
+                portalCooldown--;
+            }
+
+
+            // =========================
+            // PORTALS
+            // =========================
+
+            if (portalCooldown === 0) {
+
+                for (let portal of portals) {
+
+                    if (isColliding(player, portal)) {
+
+                        player.x = portal.targetX;
+                        player.y = portal.targetY;
+
+                        portalCooldown = 30;
+
+                        break;
+                    }
+                }
+            }
+
+
+            // =========================
+            // DANGERS
+            // =========================
+
+            for (let danger of dangers) {
+
+                if (isColliding(player, danger)) {
+
+                    player.x = 30;
+                    player.y = 115;
+
+                }
+            }
+
+
+            // =========================
+            // EXIT
+            // =========================
+
+            if (isColliding(player, exit)) {
+
+                window.location.href = "win.html";
+
+            }
+
+
+            // =========================
+            // RIGHT
+            // =========================
+
+            if (keys["d"] || keys["arrowright"]) {
+
+                let oldX = player.x;
+
+                player.x += player.speed;
+
+                for (let wall of walls) {
+
+                    if (isColliding(player, wall)) {
+
+                        player.x = oldX;
+
+                    }
+
+                }
+            }
+
+
+            // =========================
+            // LEFT
+            // =========================
+
+            if (keys["a"] || keys["arrowleft"]) {
+
+                let oldX = player.x;
+
+                player.x -= player.speed;
+
+                for (let wall of walls) {
+
+                    if (isColliding(player, wall)) {
+
+                        player.x = oldX;
+
+                    }
+
+                }
+            }
+
+
+            // =========================
+            // UP
+            // =========================
+
+            if (keys["w"] || keys["arrowup"]) {
+
+                let oldY = player.y;
+
+                player.y -= player.speed;
+
+                for (let wall of walls) {
+
+                    if (isColliding(player, wall)) {
+
+                        player.y = oldY;
+
+                    }
+
+                }
+            }
+
+
+            // =========================
+            // DOWN
+            // =========================
+
+            if (keys["s"] || keys["arrowdown"]) {
+
+                let oldY = player.y;
+
+                player.y += player.speed;
+
+                for (let wall of walls) {
+
+                    if (isColliding(player, wall)) {
+
+                        player.y = oldY;
+
+                    }
+
+                }
+            }
+
+        }
+
+
+        // =========================
+        // GAME LOOP
+        // =========================
+
+        function gameLoop() {
+
+            update();
+            draw();
+
+            requestAnimationFrame(gameLoop);
+
+        }
+
+
+        gameLoop();
+
+
+        // =========================
+        // SAVE LEVEL
+        // =========================
+
+        localStorage.setItem(
+            "lastLevel",
+            "level7"
+        );
+
+    </script>
+
+</body>
+</html>
