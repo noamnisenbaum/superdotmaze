@@ -41,10 +41,45 @@
     border-radius: 5px;
     
     font-size: 20px;
+}
+
+#controls {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    text-align: center;
+}
+
+#controls button {
+    width: 60px;
+    height: 60px;
+    margin: 3px;
+    font-size: 25px;
+    border: none;
+    border-radius: 10px;
+    background-color: #333;
+    color: white;
+    touch-action: none;
+}
+
+/* רק טלפונים וטאבלטים */
+@media (max-width: 1024px) {
+    #controls {
+        display: block;
+    }
 }</style>
 </head>
 <body>
+  <div id="controls">
+    <button data-key="w">⬆</button>
 
+    <div>
+        <button data-key="a">⬅</button>
+        <button data-key="s">⬇</button>
+        <button data-key="d">➡</button>
+    </div>
+</div>
     <div id="timer">1:30</div>
             <a href="index.html">
     <button id="exitbtn">&#10094</button>
@@ -93,6 +128,28 @@ let player = {
 };
 
 
+let keys = {};
+        const buttons = document.querySelectorAll("#controls button");
+
+buttons.forEach(button => {
+
+    const key = button.dataset.key;
+
+    button.addEventListener("touchstart", function(event) {
+        event.preventDefault();
+        keys[key] = true;
+    });
+
+    button.addEventListener("touchend", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+
+    button.addEventListener("touchcancel", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+});
 
     
 let playerColor = localStorage.getItem("playerColor") || "red";
@@ -600,7 +657,6 @@ let dangers = [
 
 ];
 
-let keys = {};
 
 document.addEventListener("keydown", function(event) {
     keys[event.key.toLowerCase()] = true;

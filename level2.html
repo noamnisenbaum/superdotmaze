@@ -25,14 +25,51 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#controls {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    text-align: center;
+}
+
+#controls button {
+    width: 60px;
+    height: 60px;
+    margin: 3px;
+    font-size: 25px;
+    border: none;
+    border-radius: 10px;
+    background-color: #333;
+    color: white;
+    touch-action: none;
+}
+
+/* רק טלפונים וטאבלטים */
+@media (max-width: 1024px) {
+    #controls {
+        display: block;
+    }
 }</style>
 </head>
 <body>
-        <a href="index.html">
-    <button id="exitbtn">&#10094</button>
-    </a>
-    <canvas id="game" width="1270" height="525"></canvas>
+<div id="controls">
+    <button data-key="w">⬆</button>
 
+    <div>
+        <button data-key="a">⬅</button>
+        <button data-key="s">⬇</button>
+        <button data-key="d">➡</button>
+    </div>
+</div>
+
+<a href="index.html">
+    <button id="exitbtn">&#10094;</button>
+</a>
+
+<canvas id="game" width="1270" height="525"></canvas>
     <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -51,6 +88,30 @@ let player = {
     height: 40,
     speed: 3
 };
+
+ let keys = {};
+        const buttons = document.querySelectorAll("#controls button");
+
+buttons.forEach(button => {
+
+    const key = button.dataset.key;
+
+    button.addEventListener("touchstart", function(event) {
+        event.preventDefault();
+        keys[key] = true;
+    });
+
+    button.addEventListener("touchend", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+
+    button.addEventListener("touchcancel", function(event) {
+        event.preventDefault();
+        keys[key] = false;
+    });
+});
+
 let playerColor = localStorage.getItem("playerColor") || "red";
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -159,7 +220,6 @@ let walls = [
 
 ];
 
-let keys = {};
 
 document.addEventListener("keydown", function(event) {
     keys[event.key.toLowerCase()] = true;
