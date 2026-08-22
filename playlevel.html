@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Play Level</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #ddd;
+            overflow: hidden;
+        }
+
+        #game {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #eee;
+        }
+
+        #exitBtn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+
+            background: #222;
+            color: white;
+
+            border: none;
+            border-radius: 5px;
+
+            padding: 10px 15px;
+
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        #controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        #controls button {
+            width: 60px;
+            height: 60px;
+
+            margin: 3px;
+
+            font-size: 25px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #333;
+            color: white;
+
+            touch-action: none;
+        }
+
+        @media (max-width: 1024px) {
+            #game {
+                width: 75vw;
+                height: auto;
+            }
+
+            #controls {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<button id="exitBtn" onclick="window.location.href='levels'">
+    ❮
+</button>
+
+<div id="controls">
+
+    <button data-key="w">⬆</button>
+
+    <div>
+        <button data-key="a">⬅</button>
+        <button data-key="s">⬇</button>
+        <button data-key="d">➡</button>
+    </div>
+
+</div>
+
+<canvas id="game" width="1270" height="525"></canvas>
+
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+
+// ============================
+// LOAD LEVEL
+// ============================
+
+const level = JSON.parse(
+    localStorage.getItem("playingLevel")
+);
+
+if (!level) {
+
+    alert("No level selected!");
+
+    window.location.href = "account.html";
+}
+
+
+// ============================
+// PLAYER
+// ============================
+
+let player = {
+    x: level.spawn.x,
+    y: level.spawn.y,
+    width: 20,
+    height: 20,
+    speed: 3
+};
+
+
+// ============================
+// LEVEL OBJECTS
+// ============================
+
+const walls = level.blocks.map(function(block) {
+
+    return {
+        x: block.x,
+        y: block.y,
+
+        width: 40,
+        height: 40
+    };
+
+});
+
+
+const dangers = level.dangers.map(function(danger) {
+
+    return {
+        x: danger.x,
+        y: danger.y,
+
+        width: 40,
+        height: 40
+    };
+
+});
+
+
+// ============================
+// EXIT
+// ============================
+
+const exit = {
+    x: level.exit.x,
+    y: level.exit.y,
+    width: 50,
+    height: 50
+};
+
+
+// ============================
+// KEYS
+// ============================
+
+let keys = {};
+
+document.addEventListener("keydown", function(event) {
+
+    keys[event.key.toLowerCase()] = true;
+
+});
+
+document.addEventListener("keyup", function(event) {
+
+    keys[event.key.toLowerCase()] = false;
+
+});
+
+
+// ============================
+// PHONE BUTTONS
+// ============================
+
+const buttons =
+    document.querySelectorAll("#controls button");
+
+
+buttons.forEach(function(button) {
+
+    const key = button.dataset.key;
+
+
+    button.addEventListener(
+        "pointerdown",
+        function(event) {
+
+            event.preventDefault();
+
+            keys[key] = true;
+
+        }
+    );
+
+
+    button.addEventListener(
+        "pointerup",
+        function(event) {
+
+            event.preventDefault();
+
+            keys[key] = false;
+
+        }
+    );
+
+
+    button.addEventListener(
+        "pointercancel",
+        function() {
+
+            keys[key] = false;
+
+        }
+    );
+
+});
+
+
+// ============================
+// COLLISION
+// ============================
+
+function isColliding(a, b) {
+
+    return (
+
+        a.x < b.x + b.width &&
+
+        a.x + a.width > b.x &&
+
+        a.y < b.y + b.height &&
+
+        a.y + a.height > b.y
+
+    );
+
+}
+
+
+// ============================
+// UPDATE
+// ============================
+
+function update() {
+
+
+    // RIGHT
+
+    if (keys["d"] || keys["arrowright"]) {
+
+        const oldX = player.x;
+
+        player.x += player.speed;
+
+
+        for (const wall of walls) {
+
+            if (isColliding(player, wall)) {
+
+                player.x = oldX;
+
+            }
+
+        }
+
+    }
+
+
+    // LEFT
+
+    if (keys["a"] || keys["arrowleft"]) {
+
+        const oldX = player.x;
+
+        player.x -= player.speed;
+
+
+        for (const wall of walls) {
+
+            if (isColliding(player, wall)) {
+
+                player.x = oldX;
+
+            }
+
+        }
+
+    }
+
+
+    // UP
+
+    if (keys["w"] || keys["arrowup"]) {
+
+        const oldY = player.y;
+
+        player.y -= player.speed;
+
+
+        for (const wall of walls) {
+
+            if (isColliding(player, wall)) {
+
+                player.y = oldY;
+
+            }
+
+        }
+
+    }
+
+
+    // DOWN
+
+    if (keys["s"] || keys["arrowdown"]) {
+
+        const oldY = player.y;
+
+        player.y += player.speed;
+
+
+        for (const wall of walls) {
+
+            if (isColliding(player, wall)) {
+
+                player.y = oldY;
+
+            }
+
+        }
+
+    }
+
+
+    // DANGER
+
+for (const danger of dangers) {
+
+    if (isColliding(player, danger)) {
+
+        player.x = level.spawn.x;
+        player.y = level.spawn.y;
+
+    }
+
+}
+
+    
+
+
+    // EXIT
+let levelComplete = false;
+    if (isColliding(player, exit)&& !levelComplete) {
+        levelComplete = true;
+        window.location.href = "win2.html";
+
+    }
+
+}
+
+
+// ============================
+// DRAW
+// ============================
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    // background
+
+    ctx.fillStyle = "#eeeeee";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    // blocks
+
+    ctx.fillStyle = "#0099ff";
+
+    for (const wall of walls) {
+
+        ctx.fillRect(
+            wall.x,
+            wall.y,
+            wall.width,
+            wall.height
+        );
+
+    }
+
+
+    // dangers
+
+    ctx.fillStyle = "orange";
+
+    for (const danger of dangers) {
+
+        ctx.fillRect(
+            danger.x,
+            danger.y,
+            danger.width,
+            danger.height
+        );
+
+    }
+
+
+    // exit
+
+    ctx.fillStyle = "green";
+
+    ctx.fillRect(
+        exit.x,
+        exit.y,
+        exit.width,
+        exit.height
+    );
+
+
+    // player
+
+    ctx.fillStyle = playerColor
+
+    ctx.fillRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+
+}
+
+
+let playerColor =
+localStorage.getItem("playerColor") || "red";
+// ============================
+// GAME LOOP
+// ============================
+
+function gameLoop() {
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+gameLoop();
+
+</script>
+
+</body>
+</html>

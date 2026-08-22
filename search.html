@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Search Levels</title>
+
+
+    <style>
+
+        body {
+
+            margin: 0;
+
+            background-color: hsl(0, 0%, 10%);
+
+            color: white;
+
+            font-family: Arial;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            min-height: 100vh;
+
+        }
+
+
+        #container {
+
+            margin-top: 50px;
+
+            width: 400px;
+
+            background-color: hsl(0, 0%, 20%);
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+        }
+
+
+        #search {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            font-size: 16px;
+
+        }
+
+
+        .level {
+
+            background-color: hsl(0, 0%, 27%);
+
+            padding: 15px;
+
+            margin-top: 12px;
+
+            border-radius: 8px;
+
+        }
+
+
+        .levelName {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+        }
+
+
+        .creator {
+
+            color: hsl(0, 0%, 70%);
+
+            margin-top: 5px;
+
+        }
+
+
+        .playButton {
+
+            width: 100%;
+
+            margin-top: 10px;
+
+            padding: 10px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background-color: hsl(205, 100%, 50%);
+
+            color: white;
+
+            cursor: pointer;
+
+        }
+
+
+        .playButton:hover {
+
+            background-color: hsl(205, 100%, 60%);
+
+        }
+
+
+       #backButton {
+    position: fixed;
+
+    top: 15px;
+    left: 15px;
+
+    padding: 10px 16px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: hsl(0, 0%, 35%);
+    color: white;
+
+    cursor: pointer;
+}
+
+#backButton:hover {
+    background-color: hsl(0, 0%, 45%);
+}
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div id="container">
+
+    <h1>🔎 Search Levels</h1>
+
+
+    <input
+        id="search"
+        type="text"
+        placeholder="Search for a level..."
+    >
+
+
+    <div id="results"></div>
+
+    <button
+        id="backButton"
+        onclick="window.location.href='levels.html'"
+    >
+        ← Back
+    </button>
+
+</div>
+
+
+
+<script>
+
+const searchInput =
+    document.getElementById("search");
+
+
+const results =
+    document.getElementById("results");
+
+
+function showLevels() {
+
+    const searchText =
+        searchInput.value.toLowerCase();
+
+
+    const allLevels =
+        JSON.parse(
+            localStorage.getItem("levels")
+        ) || [];
+
+
+    const publishedLevels =
+        allLevels.filter(function(level) {
+
+            return level.published === true;
+
+        });
+
+
+    const matchingLevels =
+        publishedLevels.filter(function(level) {
+
+            return (
+
+                level.name
+                    .toLowerCase()
+                    .includes(searchText)
+
+                ||
+
+                level.creator
+                    .toLowerCase()
+                    .includes(searchText)
+
+            );
+
+        });
+
+
+    results.innerHTML = "";
+
+
+    if (matchingLevels.length === 0) {
+
+        results.textContent =
+            "No levels found.";
+
+        return;
+
+    }
+
+
+    matchingLevels.forEach(function(level) {
+
+        const levelDiv =
+            document.createElement("div");
+
+        levelDiv.className =
+            "level";
+
+
+        const name =
+            document.createElement("div");
+
+        name.className =
+            "levelName";
+
+        name.textContent =
+            level.name;
+
+
+        const creator =
+            document.createElement("div");
+
+        creator.className =
+            "creator";
+
+        creator.textContent =
+            "Created by: " + level.creator;
+
+
+        const playButton =
+            document.createElement("button");
+
+        playButton.className =
+            "playButton";
+
+        playButton.textContent =
+            "▶ Play";
+
+
+        playButton.addEventListener(
+            "click",
+            function() {
+
+                localStorage.setItem(
+                    "playingLevel",
+                    JSON.stringify(level)
+                );
+
+                window.location.href =
+                    "playlevel.html";
+
+            }
+        );
+
+
+        levelDiv.appendChild(name);
+
+        levelDiv.appendChild(creator);
+
+        levelDiv.appendChild(playButton);
+
+
+        results.appendChild(levelDiv);
+
+    });
+
+}
+
+
+searchInput.addEventListener(
+    "input",
+    showLevels
+);
+
+
+showLevels();
+
+</script>
+
+</body>
+
+</html>

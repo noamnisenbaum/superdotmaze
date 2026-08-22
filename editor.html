@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Level Editor</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            background-color: hsl(0, 0%, 10%);
+            color: white;
+            font-family: Arial;
+        }
+
+        #topBar {
+            height: 60px;
+            background-color: hsl(0, 0%, 20%);
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 0 15px;
+        }
+
+        #levelName {
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 9px 14px;
+
+            border: none;
+            border-radius: 5px;
+
+            background-color: hsl(205, 100%, 50%);
+            color: white;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: hsl(205, 100%, 55%);
+        }
+
+        #editor {
+            position: relative;
+
+            width: 100%;
+            height: calc(100vh - 60px);
+
+            overflow: hidden;
+
+            background-color: hsl(0, 0%, 15%);
+        }
+
+
+        /* ALL OBJECTS */
+
+        .block,
+        .danger,
+        .spawn,
+        .exit {
+
+            position: absolute;
+
+            width: 40px;
+            height: 40px;
+
+            cursor: grab;
+
+            user-select: none;
+        }
+
+
+        .block {
+            background-color: hsl(205, 100%, 50%);
+        }
+
+
+        .danger {
+            background-color: orange;
+        }
+
+
+        .spawn {
+            background-color: red;
+
+            border-radius: 50%;
+        }
+
+
+        .exit {
+            background-color: green;
+        }
+
+
+        .block:active,
+        .danger:active,
+        .spawn:active,
+        .exit:active {
+
+            cursor: grabbing;
+        }
+        .selected {
+    outline: 1px solid white;
+}
+
+    </style>
+</head>
+
+<body>
+
+
+<div id="topBar">
+
+    <input
+        id="levelName"
+        placeholder="Level name"
+    >
+
+
+    <button id="addBlockBtn">
+        🧱 Add Block
+    </button>
+
+
+    <button id="addDangerBtn">
+        ☠️ Add Danger
+    </button>
+
+
+    <button id="addSpawnBtn">
+        🟥 Add Player Spawn
+    </button>
+
+
+    <button id="addExitBtn">
+        🟩 Add Exit
+    </button>
+
+
+    <button id="saveBtn">
+        💾 Save Level
+    </button>
+
+    <button id="publishBtn">
+    🌐 Publish Level
+</button>
+
+
+    <button onclick="window.location.href='levels.html'">
+        ← Back
+    </button>
+    <h3>Double-click to delete an Object</h3>
+</div>
+
+
+<div id="editor"></div>
+
+
+<script>
+
+const editor =
+    document.getElementById("editor");
+
+
+const blocks = [];
+const dangers = [];
+
+
+// Only ONE spawn and ONE exit
+
+let spawn = {
+    x: 50,
+    y: 100
+};
+
+
+let exit = {
+    x: 1200,
+    y: 220
+};
+
+
+// ============================
+// DRAG FUNCTION
+// ============================
+
+function makeDraggable(element, object, array) {
+
+    let dragging = false;
+
+    let offsetX = 0;
+    let offsetY = 0;
+
+
+    element.addEventListener("pointerdown", function(event) {
+
+        dragging = true;
+
+        element.setPointerCapture(event.pointerId);
+
+
+        const rect =
+            element.getBoundingClientRect();
+
+
+        offsetX =
+            event.clientX - rect.left;
+
+        offsetY =
+            event.clientY - rect.top;
+
+
+        // Select object
+
+        document.querySelectorAll(
+            ".block, .danger, .spawn, .exit"
+        ).forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+
+        element.classList.add("selected");
+
+    });
+
+
+    element.addEventListener("pointermove", function(event) {
+
+        if (!dragging) return;
+
+
+        const editorRect =
+            editor.getBoundingClientRect();
+
+
+        let x =
+            event.clientX -
+            editorRect.left -
+            offsetX;
+
+
+        let y =
+            event.clientY -
+            editorRect.top -
+            offsetY;
+
+
+        x = Math.max(
+            0,
+            Math.min(
+                x,
+                editor.clientWidth - element.offsetWidth
+            )
+        );
+
+
+        y = Math.max(
+            0,
+            Math.min(
+                y,
+                editor.clientHeight - element.offsetHeight
+            )
+        );
+
+
+        element.style.left =
+            x + "px";
+
+
+        element.style.top =
+            y + "px";
+
+
+        object.x = x;
+        object.y = y;
+
+    });
+
+
+    element.addEventListener("pointerup", function(event) {
+
+        dragging = false;
+
+        element.releasePointerCapture(
+            event.pointerId
+        );
+
+    });
+
+
+    // DELETE OBJECT
+
+    element.addEventListener("dblclick", function() {
+
+        deleteObject(element, object, array);
+
+    });
+
+}
+
+function deleteObject(element, object, array) {
+
+    const index =
+        array.indexOf(object);
+
+
+    if (index !== -1) {
+
+        array.splice(index, 1);
+
+    }
+
+
+    element.remove();
+
+}
+// ============================
+// ADD BLOCK
+// ============================
+
+document
+    .getElementById("addBlockBtn")
+    .addEventListener("click", function() {
+
+        const block =
+            document.createElement("div");
+
+
+        block.className = "block";
+
+
+        const blockData = {
+            x: 100,
+            y: 100
+        };
+
+
+        block.style.left =
+            blockData.x + "px";
+
+
+        block.style.top =
+            blockData.y + "px";
+
+
+        blocks.push(blockData);
+
+
+        editor.appendChild(block);
+
+
+        makeDraggable(
+            block,
+            blockData,
+            blocks
+        );
+
+    });
+
+
+// ============================
+// ADD DANGER
+// ============================
+
+document
+    .getElementById("addDangerBtn")
+    .addEventListener("click", function() {
+
+        const danger =
+            document.createElement("div");
+
+
+        danger.className = "danger";
+
+
+        const dangerData = {
+            x: 200,
+            y: 100
+        };
+
+
+        danger.style.left =
+            dangerData.x + "px";
+
+
+        danger.style.top =
+            dangerData.y + "px";
+
+
+        dangers.push(dangerData);
+
+
+        editor.appendChild(danger);
+
+
+        makeDraggable(
+            danger,
+            dangerData,
+            dangers
+        );
+
+    });
+
+
+// ============================
+// ADD PLAYER SPAWN
+// ============================
+
+document
+    .getElementById("addSpawnBtn")
+    .addEventListener("click", function() {
+
+        // Remove old spawn
+
+        const oldSpawn =
+            document.querySelector(".spawn");
+
+
+        if (oldSpawn) {
+            oldSpawn.remove();
+        }
+
+
+        const spawnElement =
+            document.createElement("div");
+
+
+        spawnElement.className =
+            "spawn";
+
+
+        spawnElement.style.left =
+            spawn.x + "px";
+
+
+        spawnElement.style.top =
+            spawn.y + "px";
+
+
+        editor.appendChild(
+            spawnElement
+        );
+
+
+        makeDraggable(
+            spawnElement,
+            spawn
+        );
+
+    });
+
+
+// ============================
+// ADD EXIT
+// ============================
+
+document
+    .getElementById("addExitBtn")
+    .addEventListener("click", function() {
+
+        // Remove old exit
+
+        const oldExit =
+            document.querySelector(".exit");
+
+
+        if (oldExit) {
+            oldExit.remove();
+        }
+
+
+        const exitElement =
+            document.createElement("div");
+
+
+        exitElement.className =
+            "exit";
+
+
+        exitElement.style.left =
+            exit.x + "px";
+
+
+        exitElement.style.top =
+            exit.y + "px";
+
+
+        editor.appendChild(
+            exitElement
+        );
+
+
+        makeDraggable(
+            exitElement,
+            exit
+        );
+
+    });
+
+// ============================
+// SAVE / PUBLISH LEVEL
+// ============================
+
+function saveLevel(published) {
+
+    const loggedInUser =
+        localStorage.getItem("loggedInUser");
+
+    if (!loggedInUser) {
+
+        alert("You must be logged in!");
+
+        return;
+    }
+
+
+    const levelName =
+        document
+            .getElementById("levelName")
+            .value
+            .trim();
+
+
+    if (levelName === "") {
+
+        alert("Enter a level name!");
+
+        return;
+    }
+
+
+    let allLevels =
+        JSON.parse(
+            localStorage.getItem("levels")
+        ) || [];
+
+const editingId = 
+    localStorage.getItem("editingLevelId");
+
+
+    // ==================================
+    // LEVEL DATA
+    // ==================================
+
+    const levelData = {
+
+        name: levelName,
+
+        creator: loggedInUser,
+
+        blocks: blocks,
+
+        dangers: dangers,
+
+        spawn: spawn,
+
+        exit: exit,
+
+        published: published
+
+    };
+
+
+    // ==================================
+    // EDIT EXISTING LEVEL
+    // ==================================
+
+    if (editingId) {
+
+        const index =
+            allLevels.findIndex(function(level) {
+
+                return level.id === editingId;
+
+            });
+
+
+        if (index !== -1) {
+
+            levelData.id = editingId;
+
+            allLevels[index] = levelData;
+
+        }
+
+    }
+
+
+    // ==================================
+    // CREATE NEW LEVEL
+    // ==================================
+
+    else {
+
+        levelData.id =
+            Date.now().toString();
+
+        allLevels.push(levelData);
+
+    }
+
+
+    // ==================================
+    // SAVE
+    // ==================================
+
+    localStorage.setItem(
+        "levels",
+        JSON.stringify(allLevels)
+    );
+
+
+    // Remember this level
+
+    localStorage.setItem(
+        "editingLevelId",
+        levelData.id
+    );
+
+
+    if (published) {
+
+        alert("Level published! 🌐");
+
+    } else {
+
+        alert("Level saved as draft! 💾");
+
+    }
+
+}
+
+
+// ==================================
+// SAVE DRAFT BUTTON
+// ==================================
+
+document
+    .getElementById("saveBtn")
+    .addEventListener("click", function() {
+
+        saveLevel(false);
+
+    });
+
+
+// ==================================
+// PUBLISH BUTTON
+// ==================================
+
+document
+    .getElementById("publishBtn")
+    .addEventListener("click", function() {
+
+        saveLevel(true);
+
+    });
+
+
+
+</script>
+
+</body>
+</html>

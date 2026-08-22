@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+
+    <style>
+        body {
+            background-color: hsl(0, 0%, 10%);
+            color: white;
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #signupBox {
+            background-color: hsl(0, 0%, 20%);
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: hsl(205, 100%, 50%);
+            color: white;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="signupBox">
+
+    <h1>Sign Up</h1>
+
+    <input id="username" type="text" placeholder="Username">
+
+    <input id="password" type="password" placeholder="Password">
+
+    <button id="signupBtn">Create Account</button>
+
+    <p id="message"></p>
+
+</div>
+
+<script>
+
+    document.getElementById("signupBtn").addEventListener("click", function() {
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === "" || password === "") {
+            document.getElementById("message").textContent =
+                "Please enter a username and password.";
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const userExists = users.some(user => user.username === username);
+
+        if (userExists) {
+            document.getElementById("message").textContent =
+                "Username already exists!";
+            return;
+        }
+
+        users.push({
+            username: username,
+            password: password
+        });
+
+        localStorage.setItem("users", JSON.stringify(users));
+
+        localStorage.setItem("loggedInUser", username);
+
+        window.location.href = "account.html";
+    });
+
+</script>
+
+</body>
+</html>

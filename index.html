@@ -35,6 +35,33 @@
 #colors{
     transform: translateX(-350px);
 }
+
+#menu{
+    font-size: 30px;
+    height: auto;
+    width: auto;
+}
+
+#accountBtn {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+
+    background-color: hsl(205, 100%, 50%);
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 18px;
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+#accountBtn:hover {
+    background-color: hsl(205, 100%, 55%);
+}
 </style>
 </head>
 <body>
@@ -53,8 +80,23 @@
     </div>
 
     <a href="colors.html"><button class="levels" id="colors">colors</button></a>
+    <a href="levels.html"><button id="menu" class="levels">🛠️</button></a>
+    <button id="accountBtn">Account</button>
+
     
     
-    <script></script>
+    
+    <script>const accountBtn = document.getElementById("accountBtn");
+
+    const loggedInUser = localStorage.getItem("loggedInUser");
+
+    if (loggedInUser) {
+        accountBtn.textContent = loggedInUser;
+    }
+
+    accountBtn.addEventListener("click", function () {
+        window.location.href = "account.html";
+    });
+    </script>
 </body>
 </html>

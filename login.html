@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+
+    <style>
+        body {
+            background-color: hsl(0, 0%, 10%);
+            color: white;
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #loginBox {
+            background-color: hsl(0, 0%, 20%);
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 7px;
+            background-color: hsl(205, 100%, 50%);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: hsl(205, 100%, 55%);
+        }
+
+        #message {
+            margin-top: 15px;
+        }
+
+        #homeBtn {
+            background-color: hsl(0, 0%, 35%);
+        }
+
+        #homeBtn:hover {
+            background-color: hsl(0, 0%, 45%);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="loginBox">
+
+    <h1>Log In</h1>
+
+    <input id="username" type="text" placeholder="Username">
+
+    <input id="password" type="password" placeholder="Password">
+
+    <button id="loginBtn">Log In</button>
+
+    <p id="message"></p>
+
+    <button id="homeBtn" onclick="window.location.href='index.html'">
+        🏠 Back to Home
+    </button>
+
+</div>
+
+<script>
+
+    document.getElementById("loginBtn").addEventListener("click", function() {
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(function(user) {
+            return user.username === username &&
+                   user.password === password;
+        });
+
+        if (user) {
+
+            localStorage.setItem("loggedInUser", username);
+
+            window.location.href = "account.html";
+
+        } else {
+
+            document.getElementById("message").textContent =
+                "Wrong username or password!";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
